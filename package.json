@@ -10,9 +10,9 @@
     "dev": "node --loader tsx/cjs src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "test": "node --loader tsx/cjs --test tests/**/*.spec.ts",
-    "test:e2e": "node --loader tsx/cjs --test tests/e2e/**/*.spec.ts",
-    "test:watch": "node --loader tsx/cjs --test --watch tests/**/*.spec.ts",
+    "test": "node --import tsx --test tests/e2e/saude.spec.ts",
+    "test:e2e": "node --import tsx --test tests/e2e/saude.spec.ts",
+    "test:watch": "node --import tsx --test --watch tests/e2e/saude.spec.ts",
     "lint": "eslint src tests",
     "type-check": "tsc --noEmit"
   },

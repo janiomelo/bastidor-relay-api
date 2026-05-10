@@ -2,8 +2,8 @@ import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import Fastify, { FastifyInstance } from 'fastify';
 import { Pool } from 'pg';
-import { registrarRotasSaude } from '../../../src/modulos/saude/rota-saude';
-import { ServicoSaude } from '../../../src/modulos/saude/servico-saude';
+import { registrarRotasSaude } from '../../src/modulos/saude/rota-saude.ts';
+import { ServicoSaude } from '../../src/modulos/saude/servico-saude.ts';
 
 let app: FastifyInstance;
 let poolMock: Pool;
