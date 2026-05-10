@@ -1,0 +1,41 @@
+openapi: 3.0.0
+info:
+  title: Bastidor Relay API
+  version: 1.0.0
+paths:
+  /auth/signup:
+    post:
+      summary: Cria uma nova conta e armazena a chave pública
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: {type: string}
+                password_hash: {type: string}
+                public_key: {type: string}
+                encrypted_private_key: {type: string}
+      responses:
+        201: {description: Usuário criado}
+
+  /auth/login:
+    post:
+      summary: Autentica e retorna o cofre de chaves
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: {type: string}
+                password_hash: {type: string}
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: {type: string}
+                  encrypted_private_key: {type: string}
