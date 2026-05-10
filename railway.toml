@@ -1,0 +1,18 @@
+name = "bastidor-relay-api"
+runtime = "nodejs"
+dockerfile = "Dockerfile"
+
+[env]
+PORT = "3000"
+
+[[services]]
+name = "api"
+runtime = "nodejs"
+plan = "hobby"
+
+[services.build]
+builder = "dockerfile"
+
+[[services.volumes]]
+mount_path = "/app/data"
+size_gb = 1

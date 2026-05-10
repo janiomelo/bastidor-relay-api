@@ -1,0 +1,117 @@
+name: Deploy para Railway
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: bastidor_relay_test
+          POSTGRES_USER: usuario
+          POSTGRES_PASSWORD: senha
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Compilar TypeScript
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Testes
+        env:
+          DATABASE_URL: postgresql://usuario:senha@localhost:5432/bastidor_relay_test
+        run: npm test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: production
+      url: https://${{ secrets.RAILWAY_SERVICE_DOMAIN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy no Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+        run: |
+          # Railway detecta Dockerfile automaticamente
+          # Apenas fazer push disparaciona deploy
+          echo "Deploy iniciado via GitHub push"
+          echo "Railway vai detectar novo Docker image e fazer deploy automaticamente"
+
+      - name: Aguardar deploy
+        run: sleep 10
+
+      - name: Validar healthcheck
+        run: |
+          for i in {1..30}; do
+            if curl -f https://${{ secrets.RAILWAY_SERVICE_DOMAIN }}/saude > /dev/null 2>&1; then
+              echo "✓ Healthcheck passou!"
+              exit 0
+            fi
+            echo "Tentativa $i/30 - aguardando deploy..."
+            sleep 10
+          done
+          echo "✗ Healthcheck falhou após 5 minutos"
+          exit 1

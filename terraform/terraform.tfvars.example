@@ -1,0 +1,20 @@
+# terraform/terraform.tfvars.example
+
+railway_api_token      = "your_railway_api_token"
+github_username        = "your_github_username"
+github_token           = "your_github_token"
+project_name           = "bastidor"
+environment_name       = "production"
+postgres_version       = "16"
+node_env               = "production"
+log_level              = "info"
+port                   = 3000
+health_check_timeout_ms = 500
+health_cache_ttl_seconds = 5
+
+# S3 Cloudflare R2
+s3_endpoint       = "https://r2-account-id.r2.cloudflarestorage.com"
+s3_region         = "auto"
+s3_bucket         = "bastidor-storage"
+s3_access_key_id  = "your_r2_access_key"
+s3_secret_access_key = "your_r2_secret_key"
