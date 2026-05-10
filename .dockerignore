@@ -4,7 +4,6 @@ npm-debug.log
 .gitignore
 README.md
 docs
-tests
 .env
 .env.local
 dist

@@ -9,7 +9,13 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Stage 2: runtime
+# Stage 2: test (CI dentro do Docker)
+FROM builder AS test
+
+RUN npm run lint
+RUN npm test
+
+# Stage 3: runtime
 FROM node:22-alpine
 
 WORKDIR /app
