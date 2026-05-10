@@ -1,8 +1,8 @@
 import { Pool } from 'pg';
 import { S3Client } from '@aws-sdk/client-s3';
-import { verificarPostgres } from './checks/check-postgres.ts';
-import { verificarStorage } from './checks/check-storage.ts';
-import { ResultadoSaude, ResultadoLiveness, StatusGeral } from './tipos-saude.ts';
+import { verificarPostgres } from './checks/check-postgres';
+import { verificarStorage } from './checks/check-storage';
+import { ResultadoSaude, ResultadoLiveness, StatusGeral } from './tipos-saude';
 
 interface CacheResultado {
   resultado: ResultadoSaude;

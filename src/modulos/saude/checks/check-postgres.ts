@@ -14,7 +14,7 @@ export async function verificarPostgres(
 
   try {
     const promise = pool.query('SELECT NOW()');
-    const resultado = await Promise.race([
+    await Promise.race([
       promise,
       new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error('Timeout')), timeout_ms)

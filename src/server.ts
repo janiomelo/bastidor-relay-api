@@ -1,10 +1,10 @@
 import Fastify from 'fastify';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyCors from '@fastify/cors';
-import { carregarAmbiente } from './infra/config/ambiente.ts';
-import { criarPoolPostgres, criarClienteS3 } from './infra/db/conexoes.ts';
-import { ServicoSaude } from './modulos/saude/servico-saude.ts';
-import { registrarRotasSaude } from './modulos/saude/rota-saude.ts';
+import { carregarAmbiente } from './infra/config/ambiente';
+import { criarPoolPostgres, criarClienteS3 } from './infra/db/conexoes';
+import { ServicoSaude } from './modulos/saude/servico-saude';
+import { registrarRotasSaude } from './modulos/saude/rota-saude';
 
 async function iniciar() {
   const ambiente = carregarAmbiente();
@@ -23,16 +23,10 @@ async function iniciar() {
   });
 
   // Inicializa conexoes
-  let pool;
-  let clienteS3;
+  const pool = await criarPoolPostgres(ambiente.DATABASE_URL);
+  app.log.info('PostgreSQL conectado');
 
-  try {
-    pool = await criarPoolPostgres(ambiente.DATABASE_URL);
-    app.log.info('PostgreSQL conectado');
-  } catch (erro) {
-    app.log.error(erro, 'Falha ao conectar PostgreSQL');
-    throw erro;
-  }
+  let clienteS3: ReturnType<typeof criarClienteS3> | null = null;
 
   try {
     clienteS3 = criarClienteS3(

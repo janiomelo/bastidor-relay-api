@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
-import { ServicoSaude } from './servico-saude.ts';
-import { ResultadoSaude, ResultadoLiveness } from './tipos-saude.ts';
+import { ServicoSaude } from './servico-saude';
+import { ResultadoSaude, ResultadoLiveness } from './tipos-saude';
 
 export async function registrarRotasSaude(app: FastifyInstance, servico: ServicoSaude) {
   app.get<{ Reply: ResultadoLiveness }>('/saude', async (_request, reply) => {
