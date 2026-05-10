@@ -1,10 +1,10 @@
 import Fastify from 'fastify';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyCors from '@fastify/cors';
-import { carregarAmbiente } from './infra/config/ambiente';
-import { criarPoolPostgres, criarClienteS3 } from './infra/db/conexoes';
-import { ServicoSaude } from './modulos/saude/servico-saude';
-import { registrarRotasSaude } from './modulos/saude/rota-saude';
+import { carregarAmbiente } from './infra/config/ambiente.js';
+import { criarPoolPostgres, criarClienteS3 } from './infra/db/conexoes.js';
+import { ServicoSaude } from './modulos/saude/servico-saude.js';
+import { registrarRotasSaude } from './modulos/saude/rota-saude.js';
 
 async function iniciar() {
   const ambiente = carregarAmbiente();
