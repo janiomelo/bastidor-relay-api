@@ -5,6 +5,7 @@ import { carregarAmbiente } from './infra/config/ambiente.js';
 import { criarPoolPostgres, criarClienteS3 } from './infra/db/conexoes.js';
 import { ServicoSaude } from './modulos/saude/servico-saude.js';
 import { registrarRotasSaude } from './modulos/saude/rota-saude.js';
+import { Pool } from 'pg';
 
 async function iniciar() {
   const ambiente = carregarAmbiente();
@@ -23,8 +24,13 @@ async function iniciar() {
   });
 
   // Inicializa conexoes
-  const pool = await criarPoolPostgres(ambiente.DATABASE_URL);
-  app.log.info('PostgreSQL conectado');
+  let pool: Pool | null = null;
+  try {
+    pool = await criarPoolPostgres(ambiente.DATABASE_URL);
+    app.log.info('PostgreSQL conectado');
+  } catch (erro) {
+    app.log.warn(erro, 'PostgreSQL indisponivel no boot; API iniciara com readiness degradada');
+  }
 
   let clienteS3: ReturnType<typeof criarClienteS3> | null = null;
 
@@ -60,7 +66,9 @@ async function iniciar() {
     app.log.info(`Sinal ${sinal} recebido, fechando gracefully...`);
 
     await app.close();
-    await pool.end();
+    if (pool) {
+      await pool.end();
+    }
 
     if (clienteS3) {
       clienteS3.destroy();

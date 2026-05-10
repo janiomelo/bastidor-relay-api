@@ -7,9 +7,17 @@ export interface ResultadoCheckPostgres {
 }
 
 export async function verificarPostgres(
-  pool: Pool,
+  pool: Pool | null,
   timeout_ms: number
 ): Promise<ResultadoCheckPostgres> {
+  if (!pool) {
+    return {
+      status: 'indisponivel',
+      latencia_ms: 0,
+      detalhe: 'Pool PostgreSQL nao inicializado',
+    };
+  }
+
   const inicio = Date.now();
 
   try {

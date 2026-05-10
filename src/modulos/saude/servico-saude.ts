@@ -14,7 +14,7 @@ export class ServicoSaude {
   private checando = false;
 
   constructor(
-    private pool: Pool,
+    private pool: Pool | null,
     private clienteS3: S3Client | null,
     private bucket: string,
     private timeout_ms: number,
