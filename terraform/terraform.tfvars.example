@@ -12,9 +12,10 @@ port                   = 3000
 health_check_timeout_ms = 500
 health_cache_ttl_seconds = 5
 
-# S3 Cloudflare R2
-s3_endpoint       = "https://r2-account-id.r2.cloudflarestorage.com"
-s3_region         = "auto"
-s3_bucket         = "bastidor-storage"
-s3_access_key_id  = "your_r2_access_key"
-s3_secret_access_key = "your_r2_secret_key"
+# Storage: Cloudflare R2 (producao)
+# Obtenha em: Cloudflare Dashboard > R2 > Manage R2 API Tokens
+s3_endpoint          = "https://SEU_ACCOUNT_ID.r2.cloudflarestorage.com"
+s3_region            = "auto"
+s3_bucket            = "bastidor-storage"
+s3_access_key_id     = "your_r2_access_key_id"
+s3_secret_access_key = "your_r2_secret_access_key"

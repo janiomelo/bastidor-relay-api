@@ -8,10 +8,9 @@ terraform {
     }
   }
 
-  # Descomentar depois de primeiro apply
-  # backend "local" {
-  #   path = "terraform.tfstate"
-  # }
+  backend "local" {
+    path = "terraform.tfstate"
+  }
 }
 
 provider "railway" {

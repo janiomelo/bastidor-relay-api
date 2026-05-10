@@ -64,7 +64,7 @@ Recomendacao: Opcao B.
 ## Dependencias a Verificar
 Nivel critico (readiness):
 - Banco PostgreSQL (ping curto com timeout)
-- Storage de blob (se configurado no ambiente, validar head/list minima)
+- Storage de blob: Cloudflare R2 em producao, MinIO em desenvolvimento (validar head/list minima)
 - Relogio do sistema (desvio maximo aceitavel, se houver requisito de assinatura/expiracao)
 
 Nivel informativo (nao derruba readiness por padrao):
