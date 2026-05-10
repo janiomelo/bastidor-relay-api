@@ -2,8 +2,8 @@ import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import Fastify, { FastifyInstance } from 'fastify';
 import { Pool } from 'pg';
-import { registrarRotasSaude } from '../../../src/modulos/saude/rota-saude.ts';
-import { ServicoSaude } from '../../../src/modulos/saude/servico-saude.ts';
+import { registrarRotasSaude } from '../../../src/modulos/saude/rota-saude';
+import { ServicoSaude } from '../../../src/modulos/saude/servico-saude';
 
 let app: FastifyInstance;
 let poolMock: Pool;
@@ -22,7 +22,7 @@ async function setupTeste() {
   await registrarRotasSaude(app, servico);
 }
 
-test('GET /saude retorna status vivo', async () => {
+void test('GET /saude retorna status vivo', async () => {
   await setupTeste();
 
   const resposta = await app.inject({
@@ -36,7 +36,7 @@ test('GET /saude retorna status vivo', async () => {
   assert(body.timestamp);
 });
 
-test('GET /saude/detalhe retorna status ok quando postgres esta disponivel', async () => {
+void test('GET /saude/detalhe retorna status ok quando postgres esta disponivel', async () => {
   await setupTeste();
 
   const resposta = await app.inject({
@@ -52,7 +52,7 @@ test('GET /saude/detalhe retorna status ok quando postgres esta disponivel', asy
   assert(body.dependencias.storage);
 });
 
-test('GET /saude/detalhe retorna 503 quando postgres falha', async () => {
+void test('GET /saude/detalhe retorna 503 quando postgres falha', async () => {
   // Mock com pool que falha
   const poolFalho = {
     query: async () => {
@@ -76,13 +76,11 @@ test('GET /saude/detalhe retorna 503 quando postgres falha', async () => {
   assert.equal(body.dependencias.postgres.status, 'indisponivel');
 });
 
-test('GET /saude/detalhe respeita cache com TTL curto', async () => {
+void test('GET /saude/detalhe respeita cache com TTL curto', async () => {
   await setupTeste();
 
-  let contador = 0;
   const poolComContador = {
     query: async () => {
-      contador++;
       return { rows: [{ now: new Date() }] };
     },
   } as unknown as Pool;
